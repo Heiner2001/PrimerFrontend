@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django + React Integration</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            min-height: 100vh;
+        }
+        
+        .App-header {
+            background: rgba(0,0,0,0.1);
+            color: #fff;
+            padding: 60px 20px 40px;
+            text-align: center;
+        }
+        
+        .App-header h1 {
+            font-size: 3em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.3em;
+            font-weight: 300;
+            opacity: 0.95;
+        }
+        
+        .App-main {
+            padding: 40px 20px;
+        }
+        
+        .container {
+            margin: 0 auto;
+            max-width: 1200px;
+        }
+        
+        .section {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .section h2 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .section h3 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .section p {
+            color: #555;
+            font-size: 1.2em;
+            line-height: 1.8;
+            text-align: center;
+        }
+        
+        .success-box {
+            background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .success-box h3 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1));
+            border: 2px solid transparent;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 15px 35px rgba(102,126,234,0.3);
+            transform: translateY(-10px);
+        }
+        
+        .feature-icon {
+            display: block;
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+        
+        .feature-card h4 {
+            color: #333;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+            font-size: 1em;
+        }
+        
+        .info-box {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            display: inline-block;
+            padding: 30px;
+            text-align: left;
+        }
+        
+        .info-box h4 {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .info-box ul {
+            list-style: none;
+        }
+        
+        .info-box li {
+            color: #555;
+            font-size: 1.1em;
+            padding: 10px 0;
+        }
+        
+        .info-box strong {
+            color: #667eea;
+        }
+        
+        .App-footer {
+            background: rgba(0,0,0,0.1);
+            color: #fff;
+            font-size: 1.1em;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        .counter {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .counter button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+            color: #fff;
+            cursor: pointer;
+            font-size: 1.5em;
+            font-weight: 700;
+            margin: 0 10px;
+            min-width: 60px;
+            padding: 15px 30px;
+            transition: all 0.3s ease;
+        }
+        
+        .counter button:hover {
+            box-shadow: 0 6px 20px rgba(102,126,234,0.5);
+            transform: scale(1.1);
+        }
+        
+        .counter button:active {
+            transform: scale(0.95);
+        }
+        
+        @media (max-width: 768px) {
+            .App-header h1 {
+                font-size: 2em;
+            }
+            .subtitle {
+                font-size: 1em;
+            }
+            .section h2, .section h3 {
+                font-size: 1.5em;
+            }
+            .section {
+                padding: 25px;
+            }
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="App">
+        <header class="App-header">
+            <h1>🚀 Django + React Integration</h1>
+            <p class="subtitle">Frontend en React conectado con Backend en Django</p>
+        </header>
+
+        <main class="App-main">
+            <div class="container">
+                <section class="section">
+                    <h2>¡Bienvenido!</h2>
+                    <p>
+                        Esta aplicación demuestra la integración completa entre Django (Backend) 
+                        y React (Frontend).
+                    </p>
+                    <div class="success-box">
+                        <h3>✅ ¡GitHub Pages funciona!</h3>
+                        <p>Tu aplicación está desplegada exitosamente en GitHub Pages.</p>
+                        <p><strong>URL:</strong> https://heiner2001.github.io/PrimerFrontend/</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h3>📡 Estado de la API</h3>
+                    <div class="success-box">
+                        <h3>🔴 Backend Django</h3>
+                        <p>El backend Django no está disponible en GitHub Pages.</p>
+                        <p>Para desarrollo local completo, ejecuta:</p>
+                        <code style="background: #f5f5f5; padding: 5px 10px; border-radius: 4px; display: block; margin: 10px auto; width: fit-content;">.\start_both_servers.ps1</code>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h3>🎯 Contador Interactivo</h3>
+                    <div class="counter">
+                        <h4>Contador: <span id="counter">0</span></h4>
+                        <button onclick="increment()">+</button>
+                        <button onclick="decrement()">-</button>
+                        <button onclick="reset()">Reset</button>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h3>✨ Características</h3>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <span class="feature-icon">🐍</span>
+                            <h4>Django Backend</h4>
+                            <p>API RESTful con Django REST Framework</p>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">⚛️</span>
+                            <h4>React Frontend</h4>
+                            <p>Interfaz moderna y reactiva</p>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">🔄</span>
+                            <h4>CORS Configurado</h4>
+                            <p>Comunicación segura entre servidores</p>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">📦</span>
+                            <h4>Axios HTTP</h4>
+                            <p>Cliente HTTP para peticiones API</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <div class="info-box">
+                        <h4>🔗 Servidores</h4>
+                        <ul>
+                            <li><strong>Frontend GitHub Pages:</strong> https://heiner2001.github.io/PrimerFrontend/</li>
+                            <li><strong>Django Backend (local):</strong> http://127.0.0.1:8000</li>
+                            <li><strong>React Frontend (local):</strong> http://localhost:3000</li>
+                        </ul>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <footer class="App-footer">
+            <p>Desarrollado con ❤️ usando Django + React</p>
+        </footer>
+    </div>
+
+    <script>
+        let counter = 0;
+        
+        function updateCounter() {
+            document.getElementById('counter').textContent = counter;
+        }
+        
+        function increment() {
+            counter++;
+            updateCounter();
+        }
+        
+        function decrement() {
+            counter--;
+            updateCounter();
+        }
+        
+        function reset() {
+            counter = 0;
+            updateCounter();
+        }
+        
+        // Initialize counter
+        updateCounter();
+        
+        // Add some interactivity
+        console.log('🚀 Django + React Integration loaded successfully!');
+        console.log('📱 GitHub Pages deployment working!');
+    </script>
+</body>
+</html>
