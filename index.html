@@ -195,6 +195,157 @@
             transform: scale(0.95);
         }
         
+        .greeting-box {
+            margin: 20px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%);
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .greeting-box h2 {
+            color: #333;
+            font-size: 1.5em;
+            margin: 10px 0;
+        }
+        
+        .custom-greeting-box {
+            margin: 20px 0;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%);
+            border-radius: 10px;
+        }
+        
+        .saludo-personalizado {
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .saludo-personalizado input {
+            background: #fff;
+            border: 3px solid #667eea;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(102,126,234,0.2);
+            color: #333;
+            font-size: 1.1em;
+            max-width: 400px;
+            outline: none;
+            padding: 15px 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .saludo-personalizado input:focus {
+            border-color: #764ba2;
+            box-shadow: 0 6px 25px rgba(102,126,234,0.4);
+            transform: scale(1.02);
+        }
+        
+        .saludo-personalizado input::placeholder {
+            color: #999;
+            font-style: italic;
+        }
+        
+        .saludo-personalizado h2 {
+            align-items: center;
+            animation: fadeIn 0.5s ease-in;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            font-size: 2.5em;
+            justify-content: center;
+            margin-top: 25px;
+            min-height: 60px;
+        }
+        
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(-10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        
+        .api-message {
+            background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1));
+            border-left: 5px solid #667eea;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin: 20px 0;
+            padding: 30px;
+            transition: transform 0.3s ease;
+        }
+        
+        .api-message:hover {
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transform: translateY(-5px);
+        }
+        
+        .api-message h2 {
+            color: #333;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+        
+        .message-text {
+            color: #555;
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin: 20px 0;
+        }
+        
+        .message-details {
+            background: #fff;
+            border-radius: 10px;
+            margin: 20px 0;
+            padding: 15px;
+        }
+        
+        .message-details p {
+            color: #666;
+            margin: 8px 0;
+        }
+        
+        .message-details strong {
+            color: #667eea;
+        }
+        
+        .refresh-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 25px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 700;
+            margin-top: 10px;
+            padding: 12px 30px;
+            transition: all 0.3s ease;
+        }
+        
+        .refresh-btn:hover {
+            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+            transform: scale(1.05);
+        }
+        
+        .refresh-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .api-note {
+            background: rgba(255,255,255,0.8);
+            border-radius: 10px;
+            margin-top: 20px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .api-note p {
+            color: #666;
+            font-size: 0.9em;
+            margin: 5px 0;
+        }
+        
         @media (max-width: 768px) {
             .App-header h1 {
                 font-size: 2em;
@@ -229,6 +380,23 @@
                         Esta aplicación demuestra la integración completa entre Django (Backend) 
                         y React (Frontend).
                     </p>
+                    
+                    <!-- Saludos estáticos -->
+                    <div class="greeting-box">
+                        <h2>Hola Ana, ¡bienvenido a React!</h2>
+                        <h2>Hola Luis, ¡bienvenido a React!</h2>
+                        <h2>Hola María, ¡bienvenido a React!</h2>
+                    </div>
+                    
+                    <!-- Saludo personalizado -->
+                    <div class="custom-greeting-box">
+                        <h3 style="color: #667eea; text-align: center; margin-bottom: 20px;">✨ Saludo Personalizado</h3>
+                        <div class="saludo-personalizado">
+                            <input type="text" id="nombreInput" placeholder="Escribe tu nombre" oninput="updateGreeting()">
+                            <h2 id="saludoDinamico">Hola visitante 👋</h2>
+                        </div>
+                    </div>
+                    
                     <div class="success-box">
                         <h3>✅ ¡GitHub Pages funciona!</h3>
                         <p>Tu aplicación está desplegada exitosamente en GitHub Pages.</p>
@@ -237,11 +405,18 @@
                 </section>
 
                 <section class="section">
-                    <h3>📡 Estado de la API</h3>
-                    <div class="success-box">
-                        <h3>🔴 Backend Django</h3>
-                        <p>El backend Django no está disponible en GitHub Pages.</p>
-                        <p>Para desarrollo local completo, ejecuta:</p>
+                    <h3>📡 Conexión con API Django</h3>
+                    <div class="api-message">
+                        <h2>✅ API Django + React</h2>
+                        <p class="message-text">¡La conexión entre Django y React funciona correctamente!</p>
+                        <div class="message-details">
+                            <p><strong>Status:</strong> success</p>
+                            <p><strong>Timestamp:</strong> <span id="currentTime"></span></p>
+                        </div>
+                        <button onclick="simulateApiCall()" class="refresh-btn">🔄 Actualizar</button>
+                    </div>
+                    <div class="api-note">
+                        <p><strong>Nota:</strong> Esta es una simulación. Para la API real, ejecuta:</p>
                         <code style="background: #f5f5f5; padding: 5px 10px; border-radius: 4px; display: block; margin: 10px auto; width: fit-content;">.\start_both_servers.ps1</code>
                     </div>
                 </section>
@@ -322,12 +497,47 @@
             updateCounter();
         }
         
-        // Initialize counter
+        function updateGreeting() {
+            const nombreInput = document.getElementById('nombreInput');
+            const saludoDinamico = document.getElementById('saludoDinamico');
+            const nombre = nombreInput.value.trim();
+            
+            if (nombre) {
+                saludoDinamico.textContent = `Hola ${nombre} 👋`;
+            } else {
+                saludoDinamico.textContent = 'Hola visitante 👋';
+            }
+        }
+        
+        function updateCurrentTime() {
+            const timeElement = document.getElementById('currentTime');
+            if (timeElement) {
+                timeElement.textContent = new Date().toLocaleString('es-ES');
+            }
+        }
+        
+        function simulateApiCall() {
+            const messageElement = document.querySelector('.message-text');
+            const timeElement = document.getElementById('currentTime');
+            
+            // Simular carga
+            messageElement.textContent = '🔄 Actualizando...';
+            
+            setTimeout(() => {
+                messageElement.textContent = '¡La conexión entre Django y React funciona correctamente!';
+                updateCurrentTime();
+            }, 1000);
+        }
+        
+        // Initialize everything
         updateCounter();
+        updateCurrentTime();
         
         // Add some interactivity
         console.log('🚀 Django + React Integration loaded successfully!');
         console.log('📱 GitHub Pages deployment working!');
+        console.log('✨ Saludo personalizado funcionando!');
+        console.log('📡 API simulation working!');
     </script>
 </body>
 </html>
