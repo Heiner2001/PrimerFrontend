@@ -42,20 +42,12 @@ body {
 .App-main {
   flex: 1;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
 }
 
-.App-footer {
-  text-align: center;
-  padding: 20px;
-  color: white;
-  background: rgba(0, 0, 0, 0.1);
-  margin-top: 40px;
-}
-
-.App-footer p {
-  font-size: 0.9em;
-  opacity: 0.8;
-}
 
 /* Responsive */
 @media (max-width: 600px) {

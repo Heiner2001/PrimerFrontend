@@ -15,10 +15,6 @@ function App() {
         <Login />
         <ListaTareas />
       </main>
-
-      <footer className="App-footer">
-        <p>Desarrollado con React ⚛️ | © 2025</p>
-      </footer>
     </div>
   );
 }
