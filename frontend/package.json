@@ -2,7 +2,7 @@
   "name": "gestor-tareas",
   "version": "1.0.0",
   "description": "Aplicación de Gestor de Tareas con React",
-  "homepage": "https://heiner2001.github.io/PrimerFrontend",
+  "homepage": ".",
   "private": true,
   "dependencies": {
     "react": "^18.2.0",
