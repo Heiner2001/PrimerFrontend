@@ -1,0 +1,249 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║                   📋 ESTRUCTURA DE COMPONENTES                       ║
+║                      Gestor de Tareas React                          ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+┌────────────────────────────────────────────────────────────────────┐
+│                          App.js                                    │
+│                    (Componente Principal)                          │
+│                                                                    │
+│  ┌──────────────────────────────────────────────────────────┐    │
+│  │                    Header                                 │    │
+│  │            📋 Gestor de Tareas                           │    │
+│  │      Organiza tu día de manera eficiente                │    │
+│  └──────────────────────────────────────────────────────────┘    │
+│                                                                    │
+│  ┌──────────────────────────────────────────────────────────┐    │
+│  │                  ┌─────────────────────┐                 │    │
+│  │                  │     Login.js        │                 │    │
+│  │                  │   (Autenticación)   │                 │    │
+│  │                  └─────────────────────┘                 │    │
+│  │                           │                               │    │
+│  │            ┌──────────────┴──────────────┐               │    │
+│  │            ▼                             ▼               │    │
+│  │   ┌──────────────────┐       ┌──────────────────┐       │    │
+│  │   │ Bienvenido 👋    │  ó    │ Por favor inicia │       │    │
+│  │   │ [Cerrar sesión]  │       │ [Iniciar sesión] │       │    │
+│  │   └──────────────────┘       └──────────────────┘       │    │
+│  └──────────────────────────────────────────────────────────┘    │
+│                                                                    │
+│  ┌──────────────────────────────────────────────────────────┐    │
+│  │              ┌──────────────────────┐                    │    │
+│  │              │   ListaTareas.js     │                    │    │
+│  │              │ (Gestor de Tareas)   │                    │    │
+│  │              └──────────────────────┘                    │    │
+│  │                         │                                │    │
+│  │        ┌────────────────┼────────────────┐              │    │
+│  │        ▼                ▼                ▼              │    │
+│  │   [Formulario]    [Lista Tareas]  [Estadísticas]       │    │
+│  │                         │                                │    │
+│  │                         ▼                                │    │
+│  │           ┌─────────────────────────┐                   │    │
+│  │           │  map() → Tarea.js       │                   │    │
+│  │           │  (Componente x cada     │                   │    │
+│  │           │   tarea individual)     │                   │    │
+│  │           └─────────────────────────┘                   │    │
+│  │                    │                                     │    │
+│  │      ┌─────────────┼─────────────┐                      │    │
+│  │      ▼             ▼             ▼                      │    │
+│  │  [Texto]    [Botón ✓]    [Botón 🗑️]                    │    │
+│  └──────────────────────────────────────────────────────────┘    │
+│                                                                    │
+│  ┌──────────────────────────────────────────────────────────┐    │
+│  │                      Footer                               │    │
+│  │         Desarrollado con React ⚛️ | © 2025               │    │
+│  └──────────────────────────────────────────────────────────┘    │
+└────────────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════
+                    🔄 FLUJO DE PROPS Y ESTADO
+═══════════════════════════════════════════════════════════════════
+
+App.js
+  ║
+  ║ (No pasa props, cada hijo maneja su estado)
+  ║
+  ╠═══► Login.js
+  ║       └── State: logueado (boolean)
+  ║
+  ╠═══► ListaTareas.js
+          ║
+          ├── State: tareas (array)
+          ├── State: nuevaTarea (string)
+          ║
+          ╚═══► Tarea.js (múltiples instancias)
+                  ║
+                  ├── Props recibidas:
+                  │   ├── tarea (object)
+                  │   ├── onCompletar (function)
+                  │   └── onEliminar (function)
+                  ║
+                  └── No tiene estado propio
+
+
+═══════════════════════════════════════════════════════════════════
+                       📁 ESTRUCTURA DE ARCHIVOS
+═══════════════════════════════════════════════════════════════════
+
+frontend/
+└── src/
+    ├── components/
+    │   ├── Login.js          ← Componente de autenticación
+    │   ├── Login.css         ← Estilos del login
+    │   ├── ListaTareas.js    ← Gestor principal de tareas
+    │   ├── ListaTareas.css   ← Estilos de la lista
+    │   ├── Tarea.js          ← Componente tarea individual ⭐
+    │   └── Tarea.css         ← Estilos de cada tarea
+    │
+    ├── App.js                ← Componente raíz principal
+    ├── App.css               ← Estilos globales
+    ├── index.js              ← Punto de entrada React
+    └── index.css             ← Estilos base
+
+
+═══════════════════════════════════════════════════════════════════
+                      🎯 RESPONSABILIDADES
+═══════════════════════════════════════════════════════════════════
+
+┌─────────────────┬──────────────────────────────────────────────┐
+│   Componente    │              Responsabilidad                 │
+├─────────────────┼──────────────────────────────────────────────┤
+│    App.js       │ • Estructura general de la aplicación       │
+│                 │ • Header, main, footer                       │
+│                 │ • Importa y renderiza Login y ListaTareas   │
+├─────────────────┼──────────────────────────────────────────────┤
+│   Login.js      │ • Maneja estado de autenticación            │
+│                 │ • Muestra mensajes según estado             │
+│                 │ • Botones de iniciar/cerrar sesión          │
+├─────────────────┼──────────────────────────────────────────────┤
+│ ListaTareas.js  │ • Gestiona array de tareas                  │
+│                 │ • Formulario para agregar tareas            │
+│                 │ • Funciones: agregar, completar, eliminar   │
+│                 │ • Renderiza múltiples componentes Tarea     │
+│                 │ • Muestra estadísticas                      │
+│                 │ • Mensaje cuando lista vacía                │
+├─────────────────┼──────────────────────────────────────────────┤
+│   Tarea.js      │ • Renderiza UNA tarea individual            │
+│                 │ • Recibe datos via props                    │
+│                 │ • Ejecuta callbacks de padre                │
+│                 │ • Componente de presentación puro           │
+└─────────────────┴──────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════
+                     🔄 FLUJO DE DATOS DETALLADO
+═══════════════════════════════════════════════════════════════════
+
+AGREGAR TAREA:
+──────────────
+Usuario escribe → Input (ListaTareas)
+                     ↓
+              onChange actualiza 'nuevaTarea'
+                     ↓
+Usuario click "Agregar" o presiona Enter
+                     ↓
+           agregarTarea() se ejecuta
+                     ↓
+         Crea objeto: { id, texto, completada }
+                     ↓
+           setTareas([...tareas, nuevaTarea])
+                     ↓
+         ListaTareas se re-renderiza
+                     ↓
+       map() crea componentes Tarea nuevos
+                     ↓
+         Cada Tarea.js recibe sus props
+
+
+MARCAR COMPLETADA:
+──────────────────
+Usuario click botón ✓ en Tarea.js
+            ↓
+  onClick llama onCompletar(tarea.id)
+            ↓
+  Callback ejecuta marcarCompletada(id) en ListaTareas
+            ↓
+  map() busca tarea por id y cambia 'completada'
+            ↓
+  setTareas(nuevoArray) actualiza estado
+            ↓
+  ListaTareas re-renderiza
+            ↓
+  Tarea.js recibe nueva prop con completada: true
+            ↓
+  CSS aplica clase 'completada' (tachado)
+
+
+ELIMINAR TAREA:
+───────────────
+Usuario click botón 🗑️ en Tarea.js
+            ↓
+  onClick llama onEliminar(tarea.id)
+            ↓
+  Callback ejecuta eliminarTarea(id) en ListaTareas
+            ↓
+  filter() crea nuevo array SIN esa tarea
+            ↓
+  setTareas(nuevoArray) actualiza estado
+            ↓
+  ListaTareas re-renderiza
+            ↓
+  Tarea.js se desmonta (desaparece de la UI)
+
+
+═══════════════════════════════════════════════════════════════════
+                          💡 CONCEPTOS CLAVE
+═══════════════════════════════════════════════════════════════════
+
+✓ ESTADO LOCAL: Cada componente maneja su propio estado
+✓ PROPS: Datos fluyen de padre → hijo (unidireccional)
+✓ CALLBACKS: Funciones se pasan como props para comunicación hijo → padre
+✓ INMUTABILIDAD: Siempre crear nuevos arrays/objetos, nunca mutar
+✓ KEYS: Cada elemento de lista necesita key única (usamos tarea.id)
+✓ SEPARACIÓN: Un archivo por componente + su CSS
+✓ REUTILIZACIÓN: Tarea.js se renderiza múltiples veces
+✓ PRESENTACIÓN vs LÓGICA: Tarea.js solo presenta, ListaTareas gestiona
+
+
+═══════════════════════════════════════════════════════════════════
+                        ✨ CARACTERÍSTICAS
+═══════════════════════════════════════════════════════════════════
+
+✅ Modular: Cada componente en su archivo
+✅ Escalable: Fácil agregar nuevos componentes
+✅ Mantenible: Código organizado y limpio
+✅ Reutilizable: Tarea.js se puede usar múltiples veces
+✅ Responsive: Diseño adaptable a móviles
+✅ Estilizado: Cada componente con su CSS
+✅ Funcional: 100% componentes funcionales con hooks
+✅ Validaciones: No permite tareas vacías
+✅ UX: Animaciones, transiciones, feedback visual
+
+
+═══════════════════════════════════════════════════════════════════
+                    🚀 COMANDOS PARA EJECUTAR
+═══════════════════════════════════════════════════════════════════
+
+cd frontend
+npm install          # Instalar dependencias (solo primera vez)
+npm start            # Ejecutar en desarrollo (http://localhost:3000)
+npm run build        # Construir para producción
+
+
+═══════════════════════════════════════════════════════════════════
+                          📦 DEPENDENCIAS
+═══════════════════════════════════════════════════════════════════
+
+• react: ^18.2.0          (Librería principal)
+• react-dom: ^18.2.0      (Renderizado en DOM)
+• react-scripts: 5.0.1    (Herramientas de desarrollo)
+
+
+╔══════════════════════════════════════════════════════════════════╗
+║                    ¡Aplicación Lista! 🎉                         ║
+║                                                                  ║
+║  Estructura modular, limpia y siguiendo las mejores prácticas  ║
+║                        de React                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+
