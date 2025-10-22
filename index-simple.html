@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📋 Gestor de Tareas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .App {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .App-header {
+            text-align: center;
+            padding: 40px 20px 20px;
+            color: white;
+        }
+        
+        .App-header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .App-header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .App-main {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .login-container {
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        
+        .login-container h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+        
+        .mensaje {
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 1em;
+        }
+        
+        .input-nombre {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            outline: none;
+            transition: all 0.3s;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+        
+        .input-nombre:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+        }
+        
+        .btn-login {
+            padding: 15px 40px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .lista-tareas-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .lista-tareas-container h2 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+        
+        .formulario {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .input-tarea {
+            flex: 1;
+            padding: 15px 20px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .input-tarea:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+        }
+        
+        .btn-agregar {
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            background: #4CAF50;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-agregar:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+        
+        .mensaje-vacio {
+            text-align: center;
+            color: #999;
+            font-size: 1.2em;
+            padding: 40px;
+            background: #f5f5f5;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        @media (max-width: 600px) {
+            .App-header h1 {
+                font-size: 2em;
+            }
+            
+            .App-header p {
+                font-size: 1em;
+            }
+            
+            .App-main {
+                padding: 10px;
+            }
+            
+            .login-container {
+                margin: 10px;
+                padding: 20px;
+            }
+            
+            .login-container h2 {
+                font-size: 1.5em;
+            }
+            
+            .lista-tareas-container {
+                margin: 10px;
+                padding: 20px;
+            }
+            
+            .lista-tareas-container h2 {
+                font-size: 1.5em;
+            }
+            
+            .formulario {
+                flex-direction: column;
+            }
+            
+            .btn-agregar {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="App">
+        <header class="App-header">
+            <h1>📋 Gestor de Tareas</h1>
+            <p>Organiza tu día de manera eficiente</p>
+        </header>
+        
+        <main class="App-main">
+            <div class="login-container">
+                <h2>Por favor inicia sesión</h2>
+                <p class="mensaje">Ingresa tu nombre para acceder a tus tareas</p>
+                <input type="text" placeholder="Escribe tu nombre..." class="input-nombre">
+                <button class="btn-login">Iniciar sesión</button>
+            </div>
+            
+            <div class="lista-tareas-container">
+                <h2>Lista de Tareas 📝</h2>
+                <div class="formulario">
+                    <input type="text" placeholder="Escribe una nueva tarea..." class="input-tarea">
+                    <button class="btn-agregar">Agregar</button>
+                </div>
+                <p class="mensaje-vacio">No tienes tareas pendientes</p>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // JavaScript básico para funcionalidad
+        console.log('Página cargada correctamente');
+        
+        // Simular funcionalidad básica
+        document.querySelector('.btn-login').addEventListener('click', function() {
+            const nombre = document.querySelector('.input-nombre').value;
+            if (nombre.trim()) {
+                alert('¡Bienvenido, ' + nombre + '!');
+            } else {
+                alert('Por favor ingresa tu nombre');
+            }
+        });
+        
+        document.querySelector('.btn-agregar').addEventListener('click', function() {
+            const tarea = document.querySelector('.input-tarea').value;
+            if (tarea.trim()) {
+                alert('Tarea agregada: ' + tarea);
+                document.querySelector('.input-tarea').value = '';
+            } else {
+                alert('Por favor escribe una tarea');
+            }
+        });
+    </script>
+</body>
+</html>
