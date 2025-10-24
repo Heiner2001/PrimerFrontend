@@ -268,14 +268,6 @@
                 <div id="error-message" class="error-message" style="display: none;"></div>
             </div>
             
-            <div class="lista-tareas-container">
-                <h2>Lista de Tareas 📝</h2>
-                <div class="formulario">
-                    <input type="text" placeholder="Escribe una nueva tarea..." class="input-tarea">
-                    <button class="btn-agregar">Agregar</button>
-                </div>
-                <p class="mensaje-vacio">No tienes tareas pendientes</p>
-            </div>
         </main>
     </div>
     
@@ -305,16 +297,6 @@
         // Iniciar sesión
         function iniciarSesion(usuario) {
             usuarioActual = usuario;
-            const loginContainer = document.querySelector('.login-container');
-            loginContainer.innerHTML = `
-                <h2>¡Bienvenido, ${usuario}! 👋</h2>
-                <p class="mensaje">Has iniciado sesión correctamente</p>
-                <button class="btn-login btn-logout" id="logoutBtn">Cerrar sesión</button>
-            `;
-            loginContainer.classList.add('logged-in-container');
-            
-            // Agregar evento de logout
-            document.getElementById('logoutBtn').addEventListener('click', cerrarSesion);
             
             // Guardar sesión
             localStorage.setItem('sesion', JSON.stringify({
@@ -322,8 +304,394 @@
                 timestamp: Date.now()
             }));
             
-            // Mostrar tareas
+            // Abrir nueva ventana con tareas
+            abrirVentanaTareas(usuario);
+        }
+        
+        // Abrir ventana de tareas
+        function abrirVentanaTareas(usuario) {
+            const ventanaTareas = window.open('', '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
+            
+            const htmlTareas = `
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📋 Gestor de Tareas - ${usuario}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 20px;
+        }
+        
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.2em;
+        }
+        
+        .user-info {
+            background: #e8f5e9;
+            border: 1px solid #c8e6c9;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .user-info span {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        
+        .btn-logout {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .btn-logout:hover {
+            box-shadow: 0 5px 15px rgba(244, 67, 54, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .formulario {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .input-tarea {
+            flex: 1;
+            padding: 15px 20px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .input-tarea:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+        }
+        
+        .btn-agregar {
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            background: #4CAF50;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-agregar:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+        
+        .lista-tareas {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .tarea-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+        
+        .tarea-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .tarea-item.completada {
+            background: #e8f5e9;
+            opacity: 0.8;
+        }
+        
+        .tarea-item.completada .tarea-texto {
+            text-decoration: line-through;
+            color: #757575;
+        }
+        
+        .tarea-texto {
+            flex: 1;
+            font-size: 16px;
+            color: #333;
+            margin-right: 15px;
+        }
+        
+        .tarea-botones {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-completar, .btn-eliminar {
+            padding: 8px 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-completar {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .btn-completar:hover {
+            background: #45a049;
+            transform: scale(1.1);
+        }
+        
+        .btn-eliminar {
+            background: #f44336;
+            color: white;
+        }
+        
+        .btn-eliminar:hover {
+            background: #da190b;
+            transform: scale(1.1);
+        }
+        
+        .mensaje-vacio {
+            text-align: center;
+            color: #999;
+            font-size: 1.2em;
+            padding: 40px;
+            background: #f5f5f5;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .estadisticas {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .estadisticas p {
+            color: #666;
+            font-size: 14px;
+            font-weight: 500;
+            margin: 0;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .formulario {
+                flex-direction: column;
+            }
+            
+            .btn-agregar {
+                width: 100%;
+            }
+            
+            .user-info {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 Gestor de Tareas</h1>
+            <p>Organiza tu día de manera eficiente</p>
+        </div>
+        
+        <div class="user-info">
+            <span>👤 Usuario: ${usuario}</span>
+            <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
+        </div>
+        
+        <div class="formulario">
+            <input type="text" placeholder="Escribe una nueva tarea..." class="input-tarea" id="nuevaTarea">
+            <button class="btn-agregar" id="agregarTarea">Agregar Tarea</button>
+        </div>
+        
+        <div id="tareas-container">
+            <p class="mensaje-vacio">No tienes tareas pendientes</p>
+        </div>
+    </div>
+    
+    <script>
+        let tareas = JSON.parse(localStorage.getItem('tareas')) || [];
+        const usuario = '${usuario}';
+        
+        // Cargar tareas al iniciar
+        mostrarTareas();
+        
+        // Event listeners
+        document.getElementById('agregarTarea').addEventListener('click', agregarTarea);
+        document.getElementById('nuevaTarea').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                agregarTarea();
+            }
+        });
+        
+        function mostrarTareas() {
+            const container = document.getElementById('tareas-container');
+            
+            if (tareas.length === 0) {
+                container.innerHTML = '<p class="mensaje-vacio">No tienes tareas pendientes</p>';
+                return;
+            }
+            
+            let html = '<ul class="lista-tareas">';
+            
+            tareas.forEach((tarea, index) => {
+                html += \`
+                    <li class="tarea-item \${tarea.completada ? 'completada' : ''}">
+                        <span class="tarea-texto">\${tarea.texto}</span>
+                        <div class="tarea-botones">
+                            <button class="btn-completar" onclick="toggleCompletada(\${index})">
+                                \${tarea.completada ? '↩️' : '✓'}
+                            </button>
+                            <button class="btn-eliminar" onclick="eliminarTarea(\${index})">
+                                🗑️
+                            </button>
+                        </div>
+                    </li>
+                \`;
+            });
+            
+            html += '</ul>';
+            
+            // Agregar estadísticas
+            const completadas = tareas.filter(t => t.completada).length;
+            const pendientes = tareas.filter(t => !t.completada).length;
+            
+            html += \`
+                <div class="estadisticas">
+                    <p>Total: \${tareas.length} | Completadas: \${completadas} | Pendientes: \${pendientes}</p>
+                </div>
+            \`;
+            
+            container.innerHTML = html;
+        }
+        
+        function agregarTarea() {
+            const input = document.getElementById('nuevaTarea');
+            const texto = input.value.trim();
+            
+            if (texto) {
+                tareas.push({
+                    id: Date.now(),
+                    texto: texto,
+                    completada: false
+                });
+                
+                localStorage.setItem('tareas', JSON.stringify(tareas));
+                mostrarTareas();
+                input.value = '';
+            }
+        }
+        
+        function toggleCompletada(index) {
+            tareas[index].completada = !tareas[index].completada;
+            localStorage.setItem('tareas', JSON.stringify(tareas));
             mostrarTareas();
+        }
+        
+        function eliminarTarea(index) {
+            if (confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
+                tareas.splice(index, 1);
+                localStorage.setItem('tareas', JSON.stringify(tareas));
+                mostrarTareas();
+            }
+        }
+        
+        function cerrarSesion() {
+            localStorage.removeItem('sesion');
+            window.close();
+        }
+        
+        // Actualizar título de la ventana
+        document.title = \`📋 Gestor de Tareas - \${usuario}\`;
+    </script>
+</body>
+</html>
+            `;
+            
+            ventanaTareas.document.write(htmlTareas);
+            ventanaTareas.document.close();
+            
+            // Mostrar mensaje de éxito en la ventana principal
+            const loginContainer = document.querySelector('.login-container');
+            loginContainer.innerHTML = `
+                <h2>¡Bienvenido, ${usuario}! 👋</h2>
+                <p class="mensaje">Has iniciado sesión correctamente</p>
+                <p class="mensaje">Se ha abierto una nueva ventana con tu gestor de tareas</p>
+                <button class="btn-login btn-logout" id="logoutBtn">Cerrar sesión</button>
+            `;
+            loginContainer.classList.add('logged-in-container');
+            
+            // Agregar evento de logout
+            document.getElementById('logoutBtn').addEventListener('click', cerrarSesion);
         }
         
         // Cerrar sesión
@@ -348,96 +716,6 @@
             }, 5000);
         }
         
-        // Mostrar tareas
-        function mostrarTareas() {
-            const tareasContainer = document.querySelector('.lista-tareas-container');
-            if (tareas.length === 0) {
-                tareasContainer.innerHTML = `
-                    <h2>Lista de Tareas 📝</h2>
-                    <div class="formulario">
-                        <input type="text" placeholder="Escribe una nueva tarea..." class="input-tarea" id="nuevaTarea">
-                        <button class="btn-agregar" id="agregarTarea">Agregar</button>
-                    </div>
-                    <p class="mensaje-vacio">No tienes tareas pendientes</p>
-                `;
-            } else {
-                let htmlTareas = `
-                    <h2>Lista de Tareas 📝</h2>
-                    <div class="formulario">
-                        <input type="text" placeholder="Escribe una nueva tarea..." class="input-tarea" id="nuevaTarea">
-                        <button class="btn-agregar" id="agregarTarea">Agregar</button>
-                    </div>
-                    <ul class="lista-tareas">
-                `;
-                
-                tareas.forEach((tarea, index) => {
-                    htmlTareas += `
-                        <li>
-                            <span style="text-decoration: ${tarea.completada ? 'line-through' : 'none'}">
-                                ${tarea.texto}
-                            </span>
-                            <div>
-                                <button onclick="toggleCompletada(${index})" style="background: #4caf50; color: white; border: none; padding: 5px 10px; margin: 0 5px; border-radius: 5px; cursor: pointer;">
-                                    ${tarea.completada ? '↩️' : '✓'}
-                                </button>
-                                <button onclick="eliminarTarea(${index})" style="background: #f44336; color: white; border: none; padding: 5px 10px; margin: 0 5px; border-radius: 5px; cursor: pointer;">
-                                    🗑️
-                                </button>
-                            </div>
-                        </li>
-                    `;
-                });
-                
-                htmlTareas += `
-                    </ul>
-                    <div class="estadisticas">
-                        <p>Total: ${tareas.length} | Completadas: ${tareas.filter(t => t.completada).length} | Pendientes: ${tareas.filter(t => !t.completada).length}</p>
-                    </div>
-                `;
-                
-                tareasContainer.innerHTML = htmlTareas;
-            }
-            
-            // Agregar evento de agregar tarea
-            document.getElementById('agregarTarea').addEventListener('click', agregarTarea);
-            document.getElementById('nuevaTarea').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    agregarTarea();
-                }
-            });
-        }
-        
-        // Agregar tarea
-        function agregarTarea() {
-            const input = document.getElementById('nuevaTarea');
-            const texto = input.value.trim();
-            if (texto) {
-                tareas.push({
-                    id: Date.now(),
-                    texto: texto,
-                    completada: false
-                });
-                localStorage.setItem('tareas', JSON.stringify(tareas));
-                mostrarTareas();
-                input.value = '';
-            }
-        }
-        
-        // Toggle completada
-        function toggleCompletada(index) {
-            tareas[index].completada = !tareas[index].completada;
-            localStorage.setItem('tareas', JSON.stringify(tareas));
-            mostrarTareas();
-        }
-        
-        // Eliminar tarea
-        function eliminarTarea(index) {
-            if (confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
-                tareas.splice(index, 1);
-                localStorage.setItem('tareas', JSON.stringify(tareas));
-                mostrarTareas();
-            }
-        }
         
         // Event listeners
         document.addEventListener('DOMContentLoaded', function() {
