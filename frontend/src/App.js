@@ -1,19 +1,17 @@
 import React from 'react';
-import Login from './components/Login';
-import ListaTareas from './components/ListaTareas';
+import Tablero from './components/Tablero';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>📋 Gestor de Tareas</h1>
-        <p>Organiza tu día de manera eficiente</p>
+        <h1>📋 Tablero Kanban</h1>
+        <p>Gestiona tus tareas de manera eficiente</p>
       </header>
       
       <main className="App-main">
-        <Login />
-        <ListaTareas />
+        <Tablero />
       </main>
     </div>
   );

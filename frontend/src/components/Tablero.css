@@ -1,0 +1,18 @@
+.tablero-container {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  padding: 20px;
+  background: #2d1b69; /* Fondo morado oscuro como en la imagen */
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+  .tablero-container {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+  }
+}
