@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📋 Tablero Kanban - Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            background: #5C2D8C; /* Fondo morado oscuro exacto de la imagen */
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .demo-header {
+            text-align: center;
+            padding: 20px;
+            background: rgba(92, 45, 140, 0.9);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .demo-header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.5em;
+            color: #F0D880;
+        }
+        
+        .demo-header p {
+            margin: 0;
+            font-size: 1.1em;
+            color: #ccc;
+        }
+        
+        .tablero-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            padding: 20px;
+            min-height: calc(100vh - 120px);
+        }
+        
+        .columna {
+            width: 300px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .columna-header {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .columna-header h3 {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0;
+        }
+        
+        .header-icons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .icon {
+            cursor: pointer;
+            font-size: 14px;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        
+        .icon:hover {
+            opacity: 1;
+        }
+        
+        .columna-content {
+            padding: 15px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #2D2D30;
+        }
+        
+        .tarea-card {
+            background: #2D2D30;
+            border-radius: 8px;
+            padding: 12px 15px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        
+        .tarea-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-color: #666;
+        }
+        
+        .tarea-texto {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 500;
+            color: white;
+        }
+        
+        .tarea-actions {
+            display: flex;
+            gap: 5px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .tarea-card:hover .tarea-actions {
+            opacity: 1;
+        }
+        
+        .btn-mover, .btn-eliminar {
+            background: none;
+            border: none;
+            color: #ccc;
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        
+        .btn-mover:hover {
+            background: #555;
+            color: white;
+        }
+        
+        .btn-eliminar:hover {
+            background: #ff4444;
+            color: white;
+        }
+        
+        .columna-footer {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        
+        .columna-footer:hover {
+            opacity: 0.8;
+        }
+        
+        .monitor-icon {
+            font-size: 16px;
+        }
+        
+        .agregar-tarea-container {
+            padding: 15px;
+            background: #2D2D30;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .input-nueva-tarea {
+            padding: 10px 12px;
+            border: 1px solid #666;
+            border-radius: 6px;
+            background: #333;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        
+        .input-nueva-tarea:focus {
+            border-color: #888;
+        }
+        
+        .input-nueva-tarea::placeholder {
+            color: #999;
+        }
+        
+        .btn-agregar {
+            padding: 8px 16px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        
+        .btn-agregar:hover {
+            background: #0056b3;
+        }
+        
+        /* Colores específicos para cada columna */
+        .columna-pendiente .columna-header,
+        .columna-pendiente .columna-footer {
+            background: #6B5700;
+        }
+        
+        .columna-pendiente .columna-header h3,
+        .columna-pendiente .columna-footer span,
+        .columna-pendiente .header-icons {
+            color: #F0D880;
+        }
+        
+        .columna-progreso .columna-header,
+        .columna-progreso .columna-footer {
+            background: #1A522D;
+        }
+        
+        .columna-progreso .columna-header h3,
+        .columna-progreso .columna-footer span,
+        .columna-progreso .header-icons {
+            color: #80F0A0;
+        }
+        
+        .columna-completada .columna-header,
+        .columna-completada .columna-footer {
+            background: #1A1A1A;
+        }
+        
+        .columna-completada .columna-header h3,
+        .columna-completada .columna-footer span,
+        .columna-completada .header-icons {
+            color: #E0E0E0;
+        }
+        
+        @media (max-width: 768px) {
+            .tablero-container {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+            
+            .columna {
+                width: 100%;
+                max-width: 350px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-header">
+        <h1>📋 Tablero Kanban</h1>
+        <p>Gestiona tus tareas de manera eficiente</p>
+    </div>
+    
+    <div class="tablero-container">
+        <!-- Columna Pendiente -->
+        <div class="columna columna-pendiente">
+            <div class="columna-header">
+                <h3>Pendiente</h3>
+                <div class="header-icons">
+                    <span class="icon">↔</span>
+                    <span class="icon">⋯</span>
+                </div>
+            </div>
+            
+            <div class="columna-content" id="pendiente-content">
+                <div class="tarea-card">
+                    <span class="tarea-texto">Tarea #3</span>
+                    <div class="tarea-actions">
+                        <button class="btn-mover" onclick="moverTarea('pendiente', 0, 'derecha')">→</button>
+                        <button class="btn-eliminar" onclick="eliminarTarea('pendiente', 0)">×</button>
+                    </div>
+                </div>
+                <div class="tarea-card">
+                    <span class="tarea-texto">Tarea #4</span>
+                    <div class="tarea-actions">
+                        <button class="btn-mover" onclick="moverTarea('pendiente', 1, 'derecha')">→</button>
+                        <button class="btn-eliminar" onclick="eliminarTarea('pendiente', 1)">×</button>
+                    </div>
+                </div>
+                <div class="tarea-card">
+                    <span class="tarea-texto">Tarea #5</span>
+                    <div class="tarea-actions">
+                        <button class="btn-mover" onclick="moverTarea('pendiente', 2, 'derecha')">→</button>
+                        <button class="btn-eliminar" onclick="eliminarTarea('pendiente', 2)">×</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="columna-footer">
+                <span>+ Añade una tarjeta</span>
+                <span class="monitor-icon">🖥️</span>
+            </div>
+            
+            <div class="agregar-tarea-container">
+                <input type="text" placeholder="Escribe una nueva tarea..." class="input-nueva-tarea" id="pendiente-input">
+                <button class="btn-agregar" onclick="agregarTarea('pendiente')">Agregar</button>
+            </div>
+        </div>
+        
+        <!-- Columna En Progreso -->
+        <div class="columna columna-progreso">
+            <div class="columna-header">
+                <h3>En Progreso</h3>
+                <div class="header-icons">
+                    <span class="icon">↔</span>
+                    <span class="icon">⋯</span>
+                </div>
+            </div>
+            
+            <div class="columna-content" id="progreso-content">
+                <div class="tarea-card">
+                    <span class="tarea-texto">Tarea #1</span>
+                    <div class="tarea-actions">
+                        <button class="btn-mover" onclick="moverTarea('progreso', 0, 'izquierda')">←</button>
+                        <button class="btn-mover" onclick="moverTarea('progreso', 0, 'derecha')">→</button>
+                        <button class="btn-eliminar" onclick="eliminarTarea('progreso', 0)">×</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="columna-footer">
+                <span>+ Añade una tarjeta</span>
+                <span class="monitor-icon">🖥️</span>
+            </div>
+            
+            <div class="agregar-tarea-container">
+                <input type="text" placeholder="Escribe una nueva tarea..." class="input-nueva-tarea" id="progreso-input">
+                <button class="btn-agregar" onclick="agregarTarea('progreso')">Agregar</button>
+            </div>
+        </div>
+        
+        <!-- Columna Finalizado -->
+        <div class="columna columna-completada">
+            <div class="columna-header">
+                <h3>Finalizado</h3>
+                <div class="header-icons">
+                    <span class="icon">↔</span>
+                    <span class="icon">⋯</span>
+                </div>
+            </div>
+            
+            <div class="columna-content" id="completada-content">
+                <div class="tarea-card">
+                    <span class="tarea-texto">Tarea #2</span>
+                    <div class="tarea-actions">
+                        <button class="btn-mover" onclick="moverTarea('completada', 0, 'izquierda')">←</button>
+                        <button class="btn-eliminar" onclick="eliminarTarea('completada', 0)">×</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="columna-footer">
+                <span>+ Añade una tarjeta</span>
+                <span class="monitor-icon">🖥️</span>
+            </div>
+            
+            <div class="agregar-tarea-container">
+                <input type="text" placeholder="Escribe una nueva tarea..." class="input-nueva-tarea" id="completada-input">
+                <button class="btn-agregar" onclick="agregarTarea('completada')">Agregar</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Estado de las tareas
+        let tareas = {
+            pendiente: ['Tarea #3', 'Tarea #4', 'Tarea #5'],
+            progreso: ['Tarea #1'],
+            completada: ['Tarea #2']
+        };
+        
+        // Función para agregar tarea
+        function agregarTarea(estado) {
+            const input = document.getElementById(estado + '-input');
+            const texto = input.value.trim();
+            
+            if (texto) {
+                tareas[estado].push(texto);
+                input.value = '';
+                actualizarColumna(estado);
+            }
+        }
+        
+        // Función para mover tarea
+        function moverTarea(estadoOrigen, indice, direccion) {
+            const tarea = tareas[estadoOrigen][indice];
+            
+            let nuevoEstado;
+            if (direccion === 'izquierda') {
+                if (estadoOrigen === 'progreso') nuevoEstado = 'pendiente';
+                else if (estadoOrigen === 'completada') nuevoEstado = 'progreso';
+            } else if (direccion === 'derecha') {
+                if (estadoOrigen === 'pendiente') nuevoEstado = 'progreso';
+                else if (estadoOrigen === 'progreso') nuevoEstado = 'completada';
+            }
+            
+            if (nuevoEstado) {
+                tareas[estadoOrigen].splice(indice, 1);
+                tareas[nuevoEstado].push(tarea);
+                actualizarColumna(estadoOrigen);
+                actualizarColumna(nuevoEstado);
+            }
+        }
+        
+        // Función para eliminar tarea
+        function eliminarTarea(estado, indice) {
+            if (confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
+                tareas[estado].splice(indice, 1);
+                actualizarColumna(estado);
+            }
+        }
+        
+        // Función para actualizar una columna
+        function actualizarColumna(estado) {
+            const content = document.getElementById(estado + '-content');
+            content.innerHTML = '';
+            
+            tareas[estado].forEach((tarea, index) => {
+                const tareaCard = document.createElement('div');
+                tareaCard.className = 'tarea-card';
+                
+                let botones = '';
+                if (estado !== 'pendiente') {
+                    botones += `<button class="btn-mover" onclick="moverTarea('${estado}', ${index}, 'izquierda')">←</button>`;
+                }
+                if (estado !== 'completada') {
+                    botones += `<button class="btn-mover" onclick="moverTarea('${estado}', ${index}, 'derecha')">→</button>`;
+                }
+                botones += `<button class="btn-eliminar" onclick="eliminarTarea('${estado}', ${index})">×</button>`;
+                
+                tareaCard.innerHTML = `
+                    <span class="tarea-texto">${tarea}</span>
+                    <div class="tarea-actions">
+                        ${botones}
+                    </div>
+                `;
+                
+                content.appendChild(tareaCard);
+            });
+        }
+        
+        // Función para manejar Enter en inputs
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('pendiente-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    agregarTarea('pendiente');
+                }
+            });
+            
+            document.getElementById('progreso-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    agregarTarea('progreso');
+                }
+            });
+            
+            document.getElementById('completada-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    agregarTarea('completada');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -56,18 +56,18 @@ function Tablero() {
       switch (estado) {
         case 'pendiente':
           return {
-            headerColor: '#8b6914',
-            textColor: '#ffd700'
+            headerColor: '#6B5700',
+            textColor: '#F0D880'
           };
         case 'progreso':
           return {
-            headerColor: '#0f5132',
-            textColor: '#90ee90'
+            headerColor: '#1A522D',
+            textColor: '#80F0A0'
           };
         case 'completada':
           return {
-            headerColor: '#1a1a1a',
-            textColor: '#ffffff'
+            headerColor: '#1A1A1A',
+            textColor: '#E0E0E0'
           };
         default:
           return {
@@ -80,7 +80,7 @@ function Tablero() {
     const estilos = getEstiloColumna();
 
     return (
-      <div className="columna" style={{ backgroundColor: '#404040' }}>
+      <div className="columna" style={{ backgroundColor: '#2D2D30' }}>
         {/* Header */}
         <div 
           className="columna-header" 
