@@ -176,6 +176,7 @@
             flex-direction: column;
             gap: 10px;
             background: #2D2D30;
+            position: relative;
         }
         
         .tarea-card {
@@ -185,12 +186,43 @@
             color: white;
             transition: all 0.2s;
             border: 1px solid transparent;
+            cursor: grab;
+            user-select: none;
         }
         
         .tarea-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             border-color: #666;
+        }
+        
+        .tarea-card:active {
+            cursor: grabbing;
+        }
+        
+        .tarea-card.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+            z-index: 1000;
+        }
+        
+        .columna-content.drag-over {
+            background-color: #3D3D40;
+            border: 2px dashed #007bff;
+            border-radius: 8px;
+        }
+        
+        .columna-content.drag-over::before {
+            content: "Suelta aquí";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #007bff;
+            font-size: 18px;
+            font-weight: bold;
+            pointer-events: none;
+            z-index: 100;
         }
         
         .tarea-header {
@@ -712,6 +744,9 @@
             tareas[estado].forEach((tarea, index) => {
                 const tareaCard = document.createElement('div');
                 tareaCard.className = 'tarea-card';
+                tareaCard.draggable = true;
+                tareaCard.setAttribute('data-estado', estado);
+                tareaCard.setAttribute('data-indice', index);
                 
                 let botones = '';
                 if (estado !== 'pendiente') {
@@ -760,6 +795,108 @@
                 
                 content.appendChild(tareaCard);
             });
+            
+            // Agregar event listeners para drag and drop
+            setupDragAndDrop(content, estado);
+        }
+        
+        // Variables globales para drag and drop
+        let draggedElement = null;
+        let draggedEstado = null;
+        let draggedIndice = null;
+        
+        // Función para configurar drag and drop en una columna
+        function setupDragAndDrop(content, estado) {
+            // Event listeners para las tarjetas de tarea
+            const tareaCards = content.querySelectorAll('.tarea-card');
+            tareaCards.forEach(card => {
+                card.addEventListener('dragstart', handleDragStart);
+                card.addEventListener('dragend', handleDragEnd);
+            });
+            
+            // Event listeners para la zona de drop (contenido de la columna)
+            content.addEventListener('dragover', handleDragOver);
+            content.addEventListener('drop', handleDrop);
+            content.addEventListener('dragenter', handleDragEnter);
+            content.addEventListener('dragleave', handleDragLeave);
+        }
+        
+        // Función que se ejecuta cuando empieza el drag
+        function handleDragStart(e) {
+            draggedElement = e.target;
+            draggedEstado = e.target.getAttribute('data-estado');
+            draggedIndice = parseInt(e.target.getAttribute('data-indice'));
+            
+            // Agregar clase visual para indicar que se está arrastrando
+            draggedElement.classList.add('dragging');
+            
+            // Configurar los datos que se transfieren
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', draggedElement.outerHTML);
+        }
+        
+        // Función que se ejecuta cuando termina el drag
+        function handleDragEnd(e) {
+            // Remover clase visual
+            draggedElement.classList.remove('dragging');
+            
+            // Limpiar variables globales
+            draggedElement = null;
+            draggedEstado = null;
+            draggedIndice = null;
+            
+            // Remover clases de todas las columnas
+            document.querySelectorAll('.columna-content').forEach(col => {
+                col.classList.remove('drag-over');
+            });
+        }
+        
+        // Función que se ejecuta cuando se arrastra sobre una zona de drop
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+        
+        // Función que se ejecuta cuando se entra en una zona de drop
+        function handleDragEnter(e) {
+            e.preventDefault();
+            e.target.closest('.columna-content').classList.add('drag-over');
+        }
+        
+        // Función que se ejecuta cuando se sale de una zona de drop
+        function handleDragLeave(e) {
+            // Solo remover la clase si realmente salimos de la columna completa
+            const columnaContent = e.target.closest('.columna-content');
+            if (!columnaContent.contains(e.relatedTarget)) {
+                columnaContent.classList.remove('drag-over');
+            }
+        }
+        
+        // Función que se ejecuta cuando se suelta el elemento
+        function handleDrop(e) {
+            e.preventDefault();
+            
+            const targetColumna = e.target.closest('.columna-content');
+            const targetEstado = targetColumna.id.replace('-content', '');
+            
+            // Solo permitir drop si es una columna diferente
+            if (targetEstado !== draggedEstado) {
+                // Obtener la tarea que se está moviendo
+                const tareaMovida = tareas[draggedEstado][draggedIndice];
+                
+                // Remover de la columna origen
+                tareas[draggedEstado].splice(draggedIndice, 1);
+                
+                // Agregar a la columna destino
+                tareas[targetEstado].push(tareaMovida);
+                
+                // Actualizar ambas columnas
+                actualizarColumna(draggedEstado);
+                actualizarColumna(targetEstado);
+            }
+            
+            // Remover clase visual
+            targetColumna.classList.remove('drag-over');
         }
         
         // Cerrar sesión
