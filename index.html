@@ -132,7 +132,7 @@
         }
         
         .columna {
-            width: 300px;
+            width: 350px;
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -183,9 +183,6 @@
             border-radius: 8px;
             padding: 12px 15px;
             color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             transition: all 0.2s;
             border: 1px solid transparent;
         }
@@ -194,6 +191,13 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             border-color: #666;
+        }
+        
+        .tarea-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
         }
         
         .tarea-texto {
@@ -214,7 +218,7 @@
             opacity: 1;
         }
         
-        .btn-mover, .btn-eliminar {
+        .btn-mover, .btn-eliminar, .btn-subtareas {
             background: none;
             border: none;
             color: #ccc;
@@ -233,6 +237,113 @@
         .btn-eliminar:hover {
             background: #ff4444;
             color: white;
+        }
+        
+        .btn-subtareas:hover {
+            background: #007bff;
+            color: white;
+        }
+        
+        .subtareas-container {
+            margin-top: 8px;
+            padding-left: 15px;
+            border-left: 2px solid #555;
+        }
+        
+        .subtarea-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            font-size: 12px;
+            color: #ccc;
+        }
+        
+        .subtarea-texto {
+            flex: 1;
+            margin-right: 8px;
+        }
+        
+        .subtarea-actions {
+            display: flex;
+            gap: 3px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .subtarea-item:hover .subtarea-actions {
+            opacity: 1;
+        }
+        
+        .btn-subtarea-edit, .btn-subtarea-delete {
+            background: none;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-size: 10px;
+            transition: all 0.2s;
+        }
+        
+        .btn-subtarea-edit:hover {
+            background: #007bff;
+            color: white;
+        }
+        
+        .btn-subtarea-delete:hover {
+            background: #ff4444;
+            color: white;
+        }
+        
+        .add-subtarea-container {
+            margin-top: 8px;
+            padding-left: 15px;
+        }
+        
+        .add-subtarea-input {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid #666;
+            border-radius: 4px;
+            background: #333;
+            color: white;
+            font-size: 12px;
+            outline: none;
+            margin-bottom: 5px;
+        }
+        
+        .add-subtarea-input:focus {
+            border-color: #888;
+        }
+        
+        .btn-add-subtarea {
+            padding: 4px 8px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            margin-right: 5px;
+        }
+        
+        .btn-add-subtarea:hover {
+            background: #218838;
+        }
+        
+        .btn-cancel-subtarea {
+            padding: 4px 8px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+        
+        .btn-cancel-subtarea:hover {
+            background: #5a6268;
         }
         
         .columna-footer {
@@ -380,27 +491,7 @@
             </div>
             
             <div class="columna-content" id="pendiente-content">
-                <div class="tarea-card">
-                    <span class="tarea-texto">Tarea #3</span>
-                    <div class="tarea-actions">
-                        <button class="btn-mover" onclick="moverTarea('pendiente', 0, 'derecha')">→</button>
-                        <button class="btn-eliminar" onclick="eliminarTarea('pendiente', 0)">×</button>
-                    </div>
-                </div>
-                <div class="tarea-card">
-                    <span class="tarea-texto">Tarea #4</span>
-                    <div class="tarea-actions">
-                        <button class="btn-mover" onclick="moverTarea('pendiente', 1, 'derecha')">→</button>
-                        <button class="btn-eliminar" onclick="eliminarTarea('pendiente', 1)">×</button>
-                    </div>
-                </div>
-                <div class="tarea-card">
-                    <span class="tarea-texto">Tarea #5</span>
-                    <div class="tarea-actions">
-                        <button class="btn-mover" onclick="moverTarea('pendiente', 2, 'derecha')">→</button>
-                        <button class="btn-eliminar" onclick="eliminarTarea('pendiente', 2)">×</button>
-                    </div>
-                </div>
+                <!-- Las tareas se renderizarán aquí dinámicamente -->
             </div>
             
             <div class="columna-footer">
@@ -425,14 +516,7 @@
             </div>
             
             <div class="columna-content" id="progreso-content">
-                <div class="tarea-card">
-                    <span class="tarea-texto">Tarea #1</span>
-                    <div class="tarea-actions">
-                        <button class="btn-mover" onclick="moverTarea('progreso', 0, 'izquierda')">←</button>
-                        <button class="btn-mover" onclick="moverTarea('progreso', 0, 'derecha')">→</button>
-                        <button class="btn-eliminar" onclick="eliminarTarea('progreso', 0)">×</button>
-                    </div>
-                </div>
+                <!-- Las tareas se renderizarán aquí dinámicamente -->
             </div>
             
             <div class="columna-footer">
@@ -457,13 +541,7 @@
             </div>
             
             <div class="columna-content" id="completada-content">
-                <div class="tarea-card">
-                    <span class="tarea-texto">Tarea #2</span>
-                    <div class="tarea-actions">
-                        <button class="btn-mover" onclick="moverTarea('completada', 0, 'izquierda')">←</button>
-                        <button class="btn-eliminar" onclick="eliminarTarea('completada', 0)">×</button>
-                    </div>
-                </div>
+                <!-- Las tareas se renderizarán aquí dinámicamente -->
             </div>
             
             <div class="columna-footer">
@@ -488,11 +566,18 @@
         
         let usuarioActual = null;
         
-        // Estado de las tareas
+        // Estado de las tareas con subtareas
         let tareas = {
-            pendiente: ['Tarea #3', 'Tarea #4', 'Tarea #5'],
-            progreso: ['Tarea #1'],
-            completada: ['Tarea #2']
+            pendiente: [
+                { texto: 'Diseñar logo', subtareas: ['Crear boceto', 'Elegir colores', 'Revisar con cliente'] },
+                { texto: 'Configurar entorno React', subtareas: ['Instalar dependencias', 'Configurar webpack'] }
+            ],
+            progreso: [
+                { texto: 'Crear componentes base', subtareas: ['Componente Header', 'Componente Footer'] }
+            ],
+            completada: [
+                { texto: 'Inicializar repositorio', subtareas: ['Crear README', 'Configurar Git'] }
+            ]
         };
         
         // Cargar estado de sesión al iniciar
@@ -529,6 +614,11 @@
             
             // Agregar evento de logout
             document.getElementById('logoutBtn').addEventListener('click', cerrarSesion);
+            
+            // Renderizar todas las columnas
+            actualizarColumna('pendiente');
+            actualizarColumna('progreso');
+            actualizarColumna('completada');
         }
         
         // Función para agregar tarea
@@ -537,7 +627,7 @@
             const texto = input.value.trim();
             
             if (texto) {
-                tareas[estado].push(texto);
+                tareas[estado].push({ texto: texto, subtareas: [] });
                 input.value = '';
                 actualizarColumna(estado);
             }
@@ -572,6 +662,48 @@
             }
         }
         
+        // Función para agregar subtarea
+        function agregarSubtarea(estado, indiceTarea) {
+            const input = document.getElementById(`subtarea-input-${estado}-${indiceTarea}`);
+            const texto = input.value.trim();
+            
+            if (texto) {
+                tareas[estado][indiceTarea].subtareas.push(texto);
+                input.value = '';
+                actualizarColumna(estado);
+            }
+        }
+        
+        // Función para editar subtarea
+        function editarSubtarea(estado, indiceTarea, indiceSubtarea) {
+            const subtarea = tareas[estado][indiceTarea].subtareas[indiceSubtarea];
+            const nuevoTexto = prompt('Editar subtarea:', subtarea);
+            
+            if (nuevoTexto !== null && nuevoTexto.trim() !== '') {
+                tareas[estado][indiceTarea].subtareas[indiceSubtarea] = nuevoTexto.trim();
+                actualizarColumna(estado);
+            }
+        }
+        
+        // Función para eliminar subtarea
+        function eliminarSubtarea(estado, indiceTarea, indiceSubtarea) {
+            if (confirm('¿Estás seguro de que quieres eliminar esta subtarea?')) {
+                tareas[estado][indiceTarea].subtareas.splice(indiceSubtarea, 1);
+                actualizarColumna(estado);
+            }
+        }
+        
+        // Función para mostrar/ocultar input de subtarea
+        function toggleSubtareaInput(estado, indiceTarea) {
+            const container = document.getElementById(`subtarea-container-${estado}-${indiceTarea}`);
+            if (container.style.display === 'none' || container.style.display === '') {
+                container.style.display = 'block';
+                container.querySelector('input').focus();
+            } else {
+                container.style.display = 'none';
+            }
+        }
+        
         // Función para actualizar una columna
         function actualizarColumna(estado) {
             const content = document.getElementById(estado + '-content');
@@ -588,13 +720,42 @@
                 if (estado !== 'completada') {
                     botones += `<button class="btn-mover" onclick="moverTarea('${estado}', ${index}, 'derecha')">→</button>`;
                 }
+                botones += `<button class="btn-subtareas" onclick="toggleSubtareaInput('${estado}', ${index})">📝</button>`;
                 botones += `<button class="btn-eliminar" onclick="eliminarTarea('${estado}', ${index})">×</button>`;
                 
-                tareaCard.innerHTML = `
-                    <span class="tarea-texto">${tarea}</span>
-                    <div class="tarea-actions">
-                        ${botones}
+                let subtareasHTML = '';
+                if (tarea.subtareas && tarea.subtareas.length > 0) {
+                    subtareasHTML += '<div class="subtareas-container">';
+                    tarea.subtareas.forEach((subtarea, subIndex) => {
+                        subtareasHTML += `
+                            <div class="subtarea-item">
+                                <span class="subtarea-texto">${subtarea}</span>
+                                <div class="subtarea-actions">
+                                    <button class="btn-subtarea-edit" onclick="editarSubtarea('${estado}', ${index}, ${subIndex})">✏️</button>
+                                    <button class="btn-subtarea-delete" onclick="eliminarSubtarea('${estado}', ${index}, ${subIndex})">×</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    subtareasHTML += '</div>';
+                }
+                
+                subtareasHTML += `
+                    <div class="add-subtarea-container" id="subtarea-container-${estado}-${index}" style="display: none;">
+                        <input type="text" placeholder="Escribe una subtarea..." class="add-subtarea-input" id="subtarea-input-${estado}-${index}">
+                        <button class="btn-add-subtarea" onclick="agregarSubtarea('${estado}', ${index})">Agregar</button>
+                        <button class="btn-cancel-subtarea" onclick="toggleSubtareaInput('${estado}', ${index})">Cancelar</button>
                     </div>
+                `;
+                
+                tareaCard.innerHTML = `
+                    <div class="tarea-header">
+                        <span class="tarea-texto">${tarea.texto}</span>
+                        <div class="tarea-actions">
+                            ${botones}
+                        </div>
+                    </div>
+                    ${subtareasHTML}
                 `;
                 
                 content.appendChild(tareaCard);
